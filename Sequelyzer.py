@@ -37,17 +37,16 @@ class Ui_MainWindow(object):
         self.Sequence_Input.setStatusTip("")
         self.Sequence_Input.setStyleSheet("border-radius: 10px;\n"
 "background-color: rgb(255, 255, 255);\n"
-" border: 1px solid #9d9d9d;\n"
-)
+" border: 1px solid #9d9d9d;\n")
         self.Sequence_Input.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.Sequence_Input.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.Sequence_Input.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.Sequence_Input.setObjectName("Sequence_Input")
-        self.btn_Calculate = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_Calculate.setGeometry(QtCore.QRect(240, 360, 75, 23))
-        self.btn_Calculate.setStyleSheet("background-color: rgb(83, 255, 161);\n"
+        self.btn_Proportion = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_Proportion.setGeometry(QtCore.QRect(200, 360, 75, 23))
+        self.btn_Proportion.setStyleSheet("background-color: rgb(83, 255, 161);\n"
 "border-radius: 5px;")
-        self.btn_Calculate.setObjectName("btn_Calculate")
+        self.btn_Proportion.setObjectName("btn_Proportion")
         self.btn_Browse = QtWidgets.QToolButton(self.centralwidget)
         self.btn_Browse.setGeometry(QtCore.QRect(50, 40, 61, 19))
         self.btn_Browse.setStyleSheet("")
@@ -71,6 +70,11 @@ class Ui_MainWindow(object):
 "border-bottom-left-radius:5px;\n"
 "border: 1px solid #9d9d9d;")
         self.textEdit.setObjectName("textEdit")
+        self.btn_Complement = QtWidgets.QPushButton(self.centralwidget)
+        self.btn_Complement.setGeometry(QtCore.QRect(280, 360, 75, 23))
+        self.btn_Complement.setStyleSheet("background-color: rgb(79, 239, 239);\n"
+"border-radius: 5px;")
+        self.btn_Complement.setObjectName("btn_Complement")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -86,13 +90,15 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.btn_Calculate.setText(_translate("MainWindow", "Calculate"))
+        self.btn_Proportion.setText(_translate("MainWindow", "Proportion"))
         self.btn_Browse.setText(_translate("MainWindow", "Browse..."))
         self.label_Result.setText(_translate("MainWindow", "Result"))
+        self.btn_Complement.setText(_translate("MainWindow", "Complement"))
 
 
         self.btn_Browse.clicked.connect(self.seq_input)
-        self.btn_Calculate.clicked.connect(self.seq_output)
+        self.btn_Proportion.clicked.connect(self.seq_output)
+        self.btn_Complement.clicked.connect(self.seq_output_r)
 
 
     # My Functions:    
@@ -148,7 +154,35 @@ class Ui_MainWindow(object):
                                 break
         
 
-        
+
+    def seq_output_r(self):
+        if self.Sequence_Input.toPlainText() == "":
+                self.textEdit.setPlainText(str("Empty Value Not Allowed"))
+                pass
+        else:
+                while True:
+                        Text = self.Sequence_Input.toPlainText()
+                        comp = []
+                        for base in Text:
+                                if base == "A":
+                                        comp.append("T")
+                                elif base == "G":
+                                        comp.append("C")
+                                elif base == "T":
+                                        comp.append("A")
+                                elif base == "C":
+                                        comp.append("G")
+                                        
+                        
+                        if all(char in valid_characters for char in Text):
+                                comp_rev = comp[::-1]
+                                comp_reverse = ''.join(comp_rev)
+                                self.textEdit.setPlainText(comp_reverse)
+                                break
+                        else:
+                                Invalid = "Invalid Sequence"
+                                self.textEdit.setPlainText(str(Invalid))
+                                break        
 
 
 if __name__ == "__main__":
