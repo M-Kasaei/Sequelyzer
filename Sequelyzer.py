@@ -15,8 +15,8 @@ import re
 import sys
 import fnmatch
 
-valid_characters = 'ATCG'
-
+DNA = 'ATCG'
+RNA = 'AUCG'
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -101,29 +101,24 @@ class Ui_MainWindow(object):
         self.btn_Complement.clicked.connect(self.seq_output_r)
 
 
-    # My Functions:    
-
+    # My Functions:
     def seq_input(self):
-
-        SeqFile, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Single File', QtCore.QDir.currentPath(), '*.fasta *.txt')
+        SeqFile, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Single File', QtCore.QDir.currentPath(), '*.fasta *.txt *.gb')
         if fnmatch.fnmatch(SeqFile, '*.txt'):
                 read_file = open(SeqFile).read()
                 self.Sequence_Input.setText(read_file)
-        elif fnmatch.fnmatch(SeqFile, '*.fasta'):
-                
-                
-                for seq_record in SeqIO.parse(SeqFile, "fasta"):
-                        
+        elif fnmatch.fnmatch(SeqFile, '*.fasta'): 
+                for seq_record in SeqIO.parse(SeqFile, "fasta"):        
+                        seqq = str(seq_record.seq)
+                        self.Sequence_Input.setText(seqq)
+        elif fnmatch.fnmatch(SeqFile, '*.gb'):   
+                for seq_record in SeqIO.parse(SeqFile, "genbank"):               
                         seqq = str(seq_record.seq)
                         self.Sequence_Input.setText(seqq)
         else:
                 pass
-        
-                
-       
-                
 
-        
+
     def seq_output(self):
         if self.Sequence_Input.toPlainText() == "":
                 self.textEdit.setPlainText(str("Empty Value Not Allowed"))
@@ -133,26 +128,30 @@ class Ui_MainWindow(object):
                         Text = self.Sequence_Input.toPlainText()
                         A = len(re.findall("A", Text))
                         T = len(re.findall("T", Text))
+                        U = len(re.findall("U", Text))
                         C = len(re.findall("C", Text))
                         G = len(re.findall("G", Text))
                         Text_length = len(Text)
                         A_p = (A/Text_length)*100
                         T_p = (T/Text_length)*100
+                        U_p = (U/Text_length)*100
                         C_p = (C/Text_length)*100
                         G_p = (G/Text_length)*100
                         CG_p = C_p + G_p
-                        if all(char in valid_characters for char in Text):
-                                
+                        if all(char in DNA for char in Text):
                                 result = "A= ", round(A_p, 2), "%", "\n\n","T= ", round(T_p, 2),"%", "\n\n", "C= ", round(C_p, 2),"%", "\n\n", "G= ", round(G_p, 2),"%", "\n\n", "CG= ", round(CG_p, 2),"%"
-                                
                                 result_1 = ''.join(map(str, result))
                                 self.textEdit.setPlainText(result_1)
                                 break
+                        elif all(char in RNA for char in Text):
+                                result = "A= ", round(A_p, 2), "%", "\n\n","U= ", round(U_p, 2),"%", "\n\n", "C= ", round(C_p, 2),"%", "\n\n", "G= ", round(G_p, 2),"%", "\n\n", "CG= ", round(CG_p, 2),"%"
+                                result_1 = ''.join(map(str, result))
+                                self.textEdit.setPlainText(result_1)
+                                break 
                         else:
                                 Invalid = "Invalid Sequence"
                                 self.textEdit.setPlainText(str(Invalid))
                                 break
-        
 
 
     def seq_output_r(self):
@@ -170,11 +169,16 @@ class Ui_MainWindow(object):
                                         comp.append("C")
                                 elif base == "T":
                                         comp.append("A")
+                                elif base == "U":
+                                        comp.append("A")
                                 elif base == "C":
-                                        comp.append("G")
-                                        
-                        
-                        if all(char in valid_characters for char in Text):
+                                        comp.append("G")         
+                        if all(char in DNA for char in Text):
+                                comp_rev = comp[::-1]
+                                comp_reverse = ''.join(comp_rev)
+                                self.textEdit.setPlainText(comp_reverse)
+                                break
+                        elif all(char in RNA for char in Text):
                                 comp_rev = comp[::-1]
                                 comp_reverse = ''.join(comp_rev)
                                 self.textEdit.setPlainText(comp_reverse)
