@@ -9,8 +9,8 @@ git clone https://github.com/M-Kasaei/Sequelyzer.git
 
 ## How to use:
 
-<p>For Calculating Proportions: paste the sequence in the text field or load a sequence file (txt or fasta) and click on Calculate button to see the result</p>
-<p>For Finding Reverse Complement: paste the sequence in the text field or load a sequence file (txt or fasta) and click on Complement button to see the result</p>
+<p>For Calculating Proportions: paste the sequence in the text field or load a sequence file (txt, fasta or genbank) and click on Calculate button to see the result</p>
+<p>For Finding Reverse Complement: paste the sequence in the text field or load a sequence file (txt, fasta or genbank) and click on Complement button to see the result</p>
 
 ## Dependencies:
 
